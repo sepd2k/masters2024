@@ -1,0 +1,44 @@
+---
+title: "Packages"
+output: html_document
+---
+
+Install packages:
+```{r}
+# install tidyverse
+install.packages(tidyverse)
+
+# install readr
+install.packages(readr)
+
+# install readxl
+install.packages(readxl)
+
+# install ggplot2
+install.packages(ggplot2)
+
+# install Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install()
+
+# install Biostrings -> see here for different Biostrings verions:
+# http://bioconductor.org/about/release-announcements/
+BiocManager::install(c("Biostrings"))
+
+install.packages("devtools")
+# install the current version of rdiamond on your system
+devtools::install_github("drostlab/rdiamond", build_vignettes = TRUE, dependencies = TRUE)
+```
+
+Load packages:
+```{r}
+library(tidyverse)
+library(readr)
+library(readxl)
+library(ggplot2)
+library(BiocManager)
+library(Biostrings)
+library(devtools)
+```
+

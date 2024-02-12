@@ -3,9 +3,43 @@ title: "kim_dataset_wrangling"
 output: html_document
 ---
 
+Data Wrangling:
 ```{r}
-library(tidyverse)
+#List of genomes, imported with .fa extension
+genome_list_alphabet<-read.table("data/list_genomes_alphabet.txt")
+
+#Removing "list_genomes.txt" from this list, as it's not a genome itself
+genome_list_alphabet <- genome_list_alphabet%>%
+  filter(V1 != "list_genomes.txt") 
+
+#Removing ".fa" extensions from this list to get just genome names
+genome_list_alphabet$V1 <- stringr::str_remove(genome_list_alphabet$V1, ".fa")
+
+#Renaming V1 column for easy merging with metadata (below)
+genome_list_alphabet <- genome_list_alphabet%>%
+  rename(Retired_bin_number_sample_bin = V1)
+
+#Genome metadata given by Kim, incl. sample pHs, temperatures, and including all
+genome_metadata <- read_xlsx("data/all.genome.info.clean.xlsx")
+
+#Filtering out genomes from metadata with less than 75% completeness and greater than 5% contamination
+genome_metadata_keep <- genome_metadata%>%
+  filter(`KeepORreject (<75% completeness, >5% contamination)` == "keep")
+
+#Combining genome list with metadata to ensure all 198 'kept' genomes match
+genome_metadata_complete <- merge(genome_list_alphabet, genome_metadata_keep, by="Retired_bin_number_sample_bin")
+
 
 ```
+
+Playing around with plots (non-plastic):
+```{r}
+ggplot(genome_metadata_complete, aes(x=Sample_temperature))+
+  geom_bar()
+
+count(genome_metadata_complete, Sample_pH>6.5)
+```
+
+
 
 
